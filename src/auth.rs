@@ -1,5 +1,4 @@
 use rocket::{
-    data,
     http::{Cookie, CookieJar},
     State,
 };
@@ -23,13 +22,13 @@ pub fn login(cookies: &CookieJar<'_>, database: &State<Mutex<Database>>) -> Stri
 
 #[get("/register")]
 pub fn register(cookies: &CookieJar<'_>, database: &State<Mutex<Database>>) -> String {
-    let user = "Fx";
-    cookies.add_private(Cookie::new(COOKIE_NAME, user));
+    let user_name = "Fx";
 
     if let Ok(mut database) = database.lock() {
         database.users.push(User {
-            name: user.to_string(),
+            name: user_name.to_string(),
         });
+        cookies.add_private(Cookie::new(COOKIE_NAME, user_name));
     }
 
     "Registered".to_owned()
