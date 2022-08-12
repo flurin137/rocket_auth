@@ -1,4 +1,3 @@
-
 pub struct Database {
     pub users: Vec<User>,
 }
@@ -6,4 +5,5 @@ pub struct Database {
 #[derive(Debug, Clone)]
 pub struct User {
     pub name: String,
+    pub password: String,
 }
