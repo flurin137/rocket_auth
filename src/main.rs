@@ -1,6 +1,7 @@
 mod auth;
 mod guards;
 mod models;
+mod hashing;
 
 use crate::models::{Database, User};
 use rocket::State;
@@ -20,7 +21,7 @@ fn secret(database: &State<Mutex<Database>>, person: User) -> String {
         return format!("Data {:?}", database.users);
     }
 
-    format!("Secret Data {}", person.name)
+    format!("Secret Data {}", person.username)
 }
 
 #[launch]

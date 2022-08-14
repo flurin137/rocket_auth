@@ -22,13 +22,14 @@ pub fn login(
     database: &State<Mutex<Database>>,
 ) -> String {
     if let Ok(database) = database.lock() {
+        let credentials = credentials.into_inner();
         if let Some(user) = database
             .users
             .iter()
-            .find(|d| d.name == credentials.username && d.password == credentials.password)
+            .find(|d| d.is_user_with_credentials(&credentials))
         {
-            cookies.add_private(Cookie::new(USER_ID_COOKIE_NAME, user.name.clone()));
-            return format!("Logged in {}", user.name);
+            cookies.add_private(Cookie::new(USER_ID_COOKIE_NAME, user.username.clone()));
+            return format!("Logged in {}", user.username);
         }
     }
     "Unable to log in".to_string()
@@ -44,15 +45,14 @@ pub fn register(
         if let Some(user) = database
             .users
             .iter()
-            .find(|d| d.name == credentials.username)
+            .find(|d| d.username == credentials.username)
         {
-            return format!("User with name {} already registered", user.name);
+            return format!("User with name {} already registered", user.username);
         }
 
-        database.users.push(User {
-            name: credentials.username.clone(),
-            password: credentials.password.clone(),
-        });
+        let user = User::from_credentials(&credentials);
+        database.users.push(user);
+
         cookies.add_private(Cookie::new(
             USER_ID_COOKIE_NAME,
             credentials.username.clone(),

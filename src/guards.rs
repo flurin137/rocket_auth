@@ -18,7 +18,7 @@ impl<'r> FromRequest<'r> for User {
             if let Ok(database) = database.lock() {
                 if let Some(cookie) = req.cookies().get_private(USER_ID_COOKIE_NAME) {
                     let name = cookie.value().to_string();
-                    if let Some(user) = database.users.iter().find(|d| d.name == name) {
+                    if let Some(user) = database.users.iter().find(|d| d.username == name) {
                         return Success(user.clone());
                     }
                 }

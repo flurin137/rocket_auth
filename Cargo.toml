@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 rocket = { version = "0.5.0-rc.2", features = ["secrets"] }
+argon2 = "0.4"
+rand_core = { version = "0.6", features = ["std"] }
