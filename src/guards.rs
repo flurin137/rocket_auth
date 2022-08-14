@@ -5,7 +5,7 @@ use rocket::outcome::Outcome::*;
 use rocket::{request::FromRequest, request::Outcome, Request, State};
 
 use crate::auth::USER_ID_COOKIE_NAME;
-use crate::models::{Database, User};
+use crate::user::{Database, User};
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for User {
@@ -17,8 +17,12 @@ impl<'r> FromRequest<'r> for User {
         if let Success(database) = database {
             if let Ok(database) = database.lock() {
                 if let Some(cookie) = req.cookies().get_private(USER_ID_COOKIE_NAME) {
-                    let name = cookie.value().to_string();
-                    if let Some(user) = database.users.iter().find(|d| d.username == name) {
+                    let user_id = cookie.value().to_string();
+                    if let Some(user) = database
+                        .users
+                        .iter()
+                        .find(|d| d.user_id().to_string() == user_id)
+                    {
                         return Success(user.clone());
                     }
                 }

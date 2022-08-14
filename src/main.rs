@@ -1,9 +1,9 @@
 mod auth;
 mod guards;
-mod models;
+mod user;
 mod hashing;
 
-use crate::models::{Database, User};
+use crate::user::{Database, User};
 use rocket::State;
 use std::sync::Mutex;
 
